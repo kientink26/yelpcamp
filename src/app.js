@@ -2,7 +2,7 @@ import express from "express";
 import campgroundRoutes from "./routes/campgrounds.js";
 import userRoutes from "./routes/users.js";
 import tokenRoutes from "./routes/tokens.js";
-import { notFoundError } from "./utils/errors.js";
+import { internalServerError, notFoundError } from "./utils/errors.js";
 import { authenticate, requireAuthentication } from "./middlewares.js";
 import ExpressError from "./utils/ExpressError.js";
 
@@ -28,10 +28,11 @@ app.use((err, req, res, next) => {
       err = new ExpressError("already exists", 400);
       break;
   }
-  const { statusCode = 500, message = "something went wrong" } = err;
-  if (statusCode === 500) {
+  if (!err.statusCode) {
     console.log(err);
+    err = internalServerError;
   }
+  const { statusCode, message } = err;
   res.status(statusCode).json({ error: message });
 });
 

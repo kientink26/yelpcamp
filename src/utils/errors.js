@@ -20,3 +20,8 @@ export const notPermittedError = new ExpressError(
 );
 
 export const badRequestError = new ExpressError("bad request", 400);
+
+export const internalServerError = new ExpressError(
+  "something went wrong",
+  500
+);

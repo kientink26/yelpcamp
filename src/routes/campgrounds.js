@@ -39,13 +39,13 @@ router
   .get(extractIDParam, catchAsync(campgrounds.showCampground))
   .patch(
     extractIDParam,
-    requireAuthorship,
+    catchAsync(requireAuthorship),
     validateBody.bind(null, updateCampgroundSchema),
     catchAsync(campgrounds.updateCampground)
   )
   .delete(
     extractIDParam,
-    requireAuthorship,
+    catchAsync(requireAuthorship),
     catchAsync(campgrounds.deleteCampground)
   );
 
