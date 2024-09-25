@@ -5,6 +5,7 @@ import {
   requireAuthenticationError,
   invalidTokenError,
   notFoundError,
+  badRequestError,
 } from "./utils/errors.js";
 
 export const requireAuthentication = (req, res, next) => {
@@ -57,5 +58,21 @@ export const extractIDParam = (req, res, next) => {
     return next(notFoundError);
   }
   req.IDParam = id;
+  next();
+};
+
+export const extractPagination = (req, res, next) => {
+  const page = req.query.page ? Number.parseInt(req.query.page, 10) : 1;
+  if (Number.isNaN(page) || page < 1) {
+    return next(badRequestError);
+  }
+  const pageSize = req.query.page_size
+    ? Number.parseInt(req.query.page_size, 10)
+    : 20;
+  if (Number.isNaN(pageSize) || pageSize < 1) {
+    return next(badRequestError);
+  }
+  req.query.page = page;
+  req.query.page_size = pageSize;
   next();
 };

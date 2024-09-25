@@ -2,7 +2,13 @@ import prisma from "../db.js";
 import { notFoundError } from "../utils/errors.js";
 
 export const listCampgrounds = async (req, res) => {
-  const campgrounds = await prisma.campground.findMany();
+  const campgrounds = await prisma.campground.findMany({
+    take: req.query.page_size,
+    skip: (req.query.page - 1) * req.query.page_size,
+    orderBy: {
+      id: "asc",
+    },
+  });
   res.json({ campgrounds: campgrounds });
 };
 

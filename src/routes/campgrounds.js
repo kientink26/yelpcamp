@@ -1,7 +1,11 @@
 import express from "express";
 import * as campgrounds from "../handlers/campgrounds.js";
 import catchAsync from "../utils/catchAsync.js";
-import { validateBody, extractIDParam } from "../middlewares.js";
+import {
+  validateBody,
+  extractIDParam,
+  extractPagination,
+} from "../middlewares.js";
 import { createCampgroundSchema, updateCampgroundSchema } from "../schema.js";
 import prisma from "../db.js";
 import { notPermittedError } from "../utils/errors.js";
@@ -21,7 +25,7 @@ const requireAuthorship = async (req, res, next) => {
 
 router
   .route("/")
-  .get(catchAsync(campgrounds.listCampgrounds))
+  .get(extractPagination, catchAsync(campgrounds.listCampgrounds))
   .post(
     validateBody.bind(null, createCampgroundSchema),
     catchAsync(campgrounds.createCampground)

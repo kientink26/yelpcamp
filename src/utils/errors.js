@@ -18,3 +18,5 @@ export const notPermittedError = new ExpressError(
   "doesn't have the necessary permissions",
   403
 );
+
+export const badRequestError = new ExpressError("bad request", 400);
