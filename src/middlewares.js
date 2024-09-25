@@ -43,10 +43,10 @@ export const authenticate = async (req, res, next) => {
 };
 
 export const validateBody = (schema, req, res, next) => {
-  const { error } = schema.validate(req.body);
+  const { error } = schema.validate(req.body, { convert: false });
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
+    next(new ExpressError(msg, 400));
   } else {
     next();
   }
