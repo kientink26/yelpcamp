@@ -8,7 +8,7 @@ import {
 } from "../middlewares.js";
 import { createCampgroundSchema, updateCampgroundSchema } from "../schema.js";
 import prisma from "../db.js";
-import { notPermittedError } from "../utils/errors.js";
+import { notFoundError, notPermittedError } from "../utils/errors.js";
 const router = express.Router();
 
 const requireAuthorship = async (req, res, next) => {
@@ -17,6 +17,9 @@ const requireAuthorship = async (req, res, next) => {
       id: req.IDParam,
     },
   });
+  if (!campground) {
+    return next(notFoundError);
+  }
   if (campground.authorId !== req.user.id) {
     return next(notPermittedError);
   }
